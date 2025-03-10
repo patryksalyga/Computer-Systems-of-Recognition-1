@@ -8,6 +8,6 @@ public class Main {
 
         System.out.println("Liczba przetworzonych artykułów: " + texts.getTexts().size());
 
-        System.out.println(texts.getTexts().get(0).getBody());
+        System.out.println(texts.getTexts().get(1).getPlaces());
     }
 }

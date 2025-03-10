@@ -47,12 +47,12 @@ public class ReutersProcessor {
         for (String article : articles) {
             if (!article.contains("</REUTERS>")) continue;
 
-            String title = extractTag(article, "TITLE");
             String body = extractTag(article, "BODY");
-            String places = extractTag(article, "PLACES");
-            String dateline = extractTag(article, "DATELINE");
+            String places = extractTag(extractTag(article, "PLACES"));
 
-            texts.addTexts(new Text(places, title, dateline, body));
+            if(!places.isEmpty()) {
+                texts.addTexts(new Text(places, body));
+            }
         }
     }
 
@@ -63,6 +63,22 @@ public class ReutersProcessor {
         int endPos = rawString.indexOf(endTag);
 
         if (startPos == -1 || endPos == -1) {
+            return "";
+        }
+
+        startPos = rawString.indexOf(">", startPos) + 1;
+        return rawString.substring(startPos, endPos).trim();
+    }
+
+    private static String extractTag(String rawString) {
+        String startTag = "<" + "D";
+        String endTag = "</" + "D" + ">";
+        int startPos = rawString.indexOf(startTag);
+        int endPos = rawString.indexOf(endTag);
+
+        int secondPos = rawString.indexOf(startTag, endPos);
+
+        if (startPos == -1 || endPos == -1 || secondPos != -1) {
             return "";
         }
 
