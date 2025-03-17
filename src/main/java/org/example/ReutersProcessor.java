@@ -3,8 +3,11 @@ package org.example;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ReutersProcessor {
+    private static final Set<String> allowedPlaces = Set.of("usa", "japan", "france", "uk", "canada", "west-germany");
+
     public ReutersProcessor(Texts texts) {
         List<File> files = new ArrayList<>();
 
@@ -50,9 +53,11 @@ public class ReutersProcessor {
             String body = extractTag(article, "BODY");
             String places = extractTag(extractTag(article, "PLACES"));
 
-            if(!places.isEmpty()) {
+
+            if (allowedPlaces.contains(places)) {
                 texts.addTexts(new Text(places, body));
             }
+
         }
     }
 
