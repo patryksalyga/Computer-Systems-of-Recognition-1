@@ -145,6 +145,7 @@ public class Text {
         lmax = longestUpperCaseWordLength;
         lavg = upperCaseWordsLength/upperCaseWordsCount;
         s7 = longWordsCount;
+        sdict = wordsFromDictionariesCount;
 
         if(countries.size() > 0){
             int maxValue = countries.values().stream()
@@ -206,7 +207,7 @@ public class Text {
     @Override
     public String toString() {
         return "Text{" +
-                ", pmax='" + pmax + '\'' +
+                "pmax='" + pmax + '\'' +
                 ", wmax='" + wmax + '\'' +
                 ", omax='" + omax + '\'' +
                 ", imax='" + imax + '\'' +
