@@ -4,11 +4,12 @@ import java.util.HashMap;
 
 public class Main {
     public static void main(String[] args) {
-        Texts texts = new Texts();
+        Dictionaries dictionaries = new Dictionaries();
+        Texts texts = new Texts(dictionaries);
 
         ReutersProcessor rp = new ReutersProcessor(texts);
 
-        System.out.println("Liczba przetworzonych artykułów: " + texts.getTexts().size());
+        //System.out.println("Liczba przetworzonych artykułów: " + texts.getTexts().size());
 
         HashMap<String, Integer> countryList = new HashMap<String, Integer>();
 
@@ -20,6 +21,9 @@ public class Main {
             }
         }
 
-        System.out.println(countryList);
+        //System.out.println(countryList);
+        //System.out.println(texts.getTexts().get(0).getBody());
+
+        texts.createVectors();
     }
 }

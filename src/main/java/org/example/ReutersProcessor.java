@@ -55,7 +55,7 @@ public class ReutersProcessor {
 
 
             if (allowedPlaces.contains(places)) {
-                texts.addTexts(new Text(places, body));
+                texts.addTexts(new Text(places, body, texts.getDictionaries()));
             }
 
         }
