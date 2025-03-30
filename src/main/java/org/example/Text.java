@@ -17,10 +17,10 @@ public class Text {
     private String imax = null;
     private String gmax = null;
     private boolean fkraj = false;
-    private int lmax;
-    private float lavg;
-    private int sdict;
-    private int s7;
+    private double lmax;
+    private double lavg;
+    private double sdict;
+    private double s7;
 
     public Text(String places, String body, Dictionaries dictionaries) {
         this.places = places;
@@ -204,6 +204,22 @@ public class Text {
         }
     }
 
+    public double getLmax() {
+        return lmax;
+    }
+
+    public double getLavg() {
+        return lavg;
+    }
+
+    public double getSdict() {
+        return sdict;
+    }
+
+    public double getS7() {
+        return s7;
+    }
+
     @Override
     public String toString() {
         return "Text{" +
@@ -218,5 +234,12 @@ public class Text {
                 ", sdict=" + sdict +
                 ", s7=" + s7 +
                 '}';
+    }
+
+    public void normalize(double lmaxMax, double lmaxMin, double lavgMax, double lavgMin, double sdictMax, double sdictMin, double s7Max, double s7Min) {
+        lmax = (lmax - lmaxMin) / (lmaxMax - lmaxMin);
+        lavg = (lavg - lavgMin) / (lavgMax - lavgMin);
+        sdict = (sdict - sdictMin) / (sdictMax - sdictMin);
+        s7 = (s7 - s7Min) / (s7Max - s7Min);
     }
 }
