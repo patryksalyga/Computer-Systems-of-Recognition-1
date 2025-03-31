@@ -22,7 +22,9 @@ public class Main {
         }
 
         //System.out.println(countryList);
-        //System.out.println(texts.getTexts().get(0).getBody());
+        //System.out.println(testTexts.getTexts().get(0).getArticle());
+
+        testTexts.createVectors();
 
         TrainTexts trainTexts = new TrainTexts(20, countryList, testTexts);
 
@@ -48,8 +50,9 @@ public class Main {
         System.out.println(trainTextCount);
         System.out.println(testTextCount);
 
-
-
-        testTexts.createVectors();
+//        testTexts.getTexts().get(0).decide(trainTexts.getTexts());
+        for(Text text : testTexts.getTexts()){
+            text.decide(trainTexts.getTexts());
+        }
     }
 }

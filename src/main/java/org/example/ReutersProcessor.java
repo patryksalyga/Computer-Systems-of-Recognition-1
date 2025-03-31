@@ -13,7 +13,7 @@ public class ReutersProcessor {
 
         String basePath = "src/main/resources/reuters21578/";
 
-        for (int i = 0; i <= 21; i++) {
+        for (int i = 0; i <= 21; i++) { // i: min - > 0 max -> 21
             String fileName = String.format("reut2-%03d.sgm", i);
             File file = new File(basePath + fileName);
             files.add(file);
@@ -51,8 +51,12 @@ public class ReutersProcessor {
             if (!article.contains("</REUTERS>")) continue;
 
             String body = extractTag(article, "BODY");
-            String places = extractTag(extractTag(article, "PLACES"));
 
+            if (body.isEmpty()) {
+                body = extractTag(article, "TEXT");
+            }
+
+            String places = extractTag(extractTag(article, "PLACES"));
 
             if (allowedPlaces.contains(places)) {
                 testTexts.addTexts(new Text(places, body, testTexts.getDictionaries()));

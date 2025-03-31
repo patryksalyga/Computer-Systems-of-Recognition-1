@@ -1,14 +1,13 @@
 package org.example;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
+
+import static java.lang.Double.NaN;
 
 public class Text {
     private String places;
+    private String prediction;
     private String body;
-
     private Dictionaries dictionaries;
 
     private String pmax = null;
@@ -204,6 +203,30 @@ public class Text {
         }
     }
 
+    public String getPmax() {
+        return pmax;
+    }
+
+    public String getWmax() {
+        return wmax;
+    }
+
+    public String getOmax() {
+        return omax;
+    }
+
+    public String getImax() {
+        return imax;
+    }
+
+    public String getGmax() {
+        return gmax;
+    }
+
+    public boolean isFkraj() {
+        return fkraj;
+    }
+
     public double getLmax() {
         return lmax;
     }
@@ -241,5 +264,22 @@ public class Text {
         lavg = (lavg - lavgMin) / (lavgMax - lavgMin);
         sdict = (sdict - sdictMin) / (sdictMax - sdictMin);
         s7 = (s7 - s7Min) / (s7Max - s7Min);
+    }
+
+    public void decide(List<Text> texts) {
+        for(Text text : texts){
+            //Zliczanie odleglosci do kazdego tekstu
+//            System.out.println(text.toString());
+//            if(text.toString().equals("Text{pmax='null', wmax='null', omax='null', imax='null', gmax='null', fkraj=false, lmax=0.0, lavg=NaN, sdict=0.0, s7=0.0}")){
+//                System.out.println(text.toString());
+//                System.out.println(text.getBody());
+//                System.out.println(text.getPlaces());
+//            }
+//            if (Double.isNaN(Metrics.euclidean(this, text))){
+//                System.out.println(Metrics.euclidean(this, text) + "_____" + this.toString() + "------ " + text.toString());
+//            }
+            System.out.println(Metrics.euclidean(this, text));
+        }
+        //Decyzja
     }
 }
