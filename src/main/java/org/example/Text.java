@@ -2,6 +2,8 @@ package org.example;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 public class Text {
     private String places;
@@ -265,83 +267,76 @@ public class Text {
         s7 = (s7 - s7Min) / (s7Max - s7Min);
     }
 
-    public void decide(List<Text> texts, String metric, int k) {
+    public void decide(List<Text> texts, String metric, int k, boolean reccurent) {
         Map<Text, Double> distances = new HashMap<>();
-        for(Text text : texts){
-            //Zliczanie odleglosci do kazdego tekstu
-//            System.out.println(text.toString());
-//            if(text.toString().equals("Text{pmax='null', wmax='null', omax='null', imax='null', gmax='null', fkraj=false, lmax=0.0, lavg=NaN, sdict=0.0, s7=0.0}")){
-//                System.out.println(text.toString());
-//                System.out.println(text.getBody());
-//                System.out.println(text.getPlaces());
-//            }
-//            if (Double.isNaN(Metrics.euclidean(this, text))){
-//                System.out.println(Metrics.euclidean(this, text) + "_____" + this.toString() + "------ " + text.toString());
-//            }
-            double distance = 0;
-            if(metric.equals("euclidean")) {
-                //System.out.println(Metrics.euclidean(this, text));
-                distance = Metrics.euclidean(this, text);
-            } else if(metric.equals("manhattan")) {
-                System.out.println(Metrics.manhattan(this, text));
-                distance = Metrics.manhattan(this, text);
-            } else if(metric.equals("czebyszew")) {
-                System.out.println(Metrics.czebyszew(this, text));
-                distance = Metrics.czebyszew(this, text);
-            }
+
+        for (Text text : texts) {
+            double distance = switch (metric) {
+                case "euclidean" -> Metrics.euclidean(this, text);
+                case "manhattan" -> Metrics.manhattan(this, text);
+                case "czebyszew" -> Metrics.czebyszew(this, text);
+                default -> throw new IllegalArgumentException("Nieznana metryka: " + metric);
+            };
             distances.put(text, distance);
         }
-        //Decyzja
+
+        List<Map.Entry<Text, Double>> sortedDistances = distances.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue())
+                .collect(Collectors.toList());
+
+        double kthDistance = sortedDistances.get(k - 1).getValue();
+
+        List<Map.Entry<Text, Double>> nearestNeighbors = sortedDistances.stream()
+                .filter(entry -> entry.getValue() <= kthDistance)
+                .collect(Collectors.toList());
+
         Map<String, Integer> votes = new HashMap<>();
         Map<String, Double> distancesSum = new HashMap<>();
 
-        for (int i = 0; i < k; i++) {
-            Text nearest = Collections.min(distances.entrySet(), Map.Entry.comparingByValue()).getKey();
-            double distance = distances.get(nearest);
-            distances.remove(nearest);
-            if (votes.containsKey(nearest.getPlaces())) {
-                votes.put(nearest.getPlaces(), votes.get(nearest.getPlaces()) + 1);
-                distancesSum.put(nearest.getPlaces(), distancesSum.get(nearest.getPlaces()) + distance);
-            } else {
-                votes.put(nearest.getPlaces(), 1);
-                distancesSum.put(nearest.getPlaces(), distance);
-            }
+        for (Map.Entry<Text, Double> entry : nearestNeighbors) {
+            String place = entry.getKey().getPlaces();
+            votes.put(place, votes.getOrDefault(place, 0) + 1);
+            distancesSum.put(place, distancesSum.getOrDefault(place, 0.0) + entry.getValue());
         }
 
-        System.out.println(votes);
-        System.out.println(distancesSum);
+        System.out.println("Głosy: " + votes);
+        System.out.println("Sumy odległości: " + distancesSum);
 
         int maxVotes = Collections.max(votes.values());
 
-        System.out.println(maxVotes);
+        List<String> topPlaces = votes.entrySet().stream()
+                .filter(entry -> entry.getValue() == maxVotes)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
 
-        AtomicInteger maxVotesCount = new AtomicInteger(); // zmienna zliczająca ilość maksymalnych wartości
-
-        votes.forEach((country, val) -> {
-            if (val == maxVotes) {
-                maxVotesCount.getAndIncrement();
-            }
-        });
-
-        if(maxVotesCount.get() == 1) {
-            prediction = Collections.max(votes.entrySet(), Map.Entry.comparingByValue()).getKey();
-        } else {
-            double minDistance = Collections.min(distancesSum.values());
-
-            AtomicInteger minDistanceCount = new AtomicInteger(); // zmienna zliczająca ilość minimalnych wartości
-
-            distancesSum.forEach((country, val) -> {
-                if (val == minDistance) {
-                    minDistanceCount.getAndIncrement();
-                }
-            });
-
-            if(minDistanceCount.get() == 1) {
-                prediction = Collections.min(distancesSum.entrySet(), Map.Entry.comparingByValue()).getKey();
-            } else {
-                decide(texts, metric, k - 1);
-            }
+        if (topPlaces.size() == 1) {
+            prediction = topPlaces.get(0);
+            return;
         }
+
+        double minDistance = Collections.min(distancesSum.values());
+
+        List<String> closestPlaces = distancesSum.entrySet().stream()
+                .filter(entry -> entry.getValue() == minDistance)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
+
+        if (closestPlaces.size() == 1) {
+            prediction = closestPlaces.get(0);
+            return;
+        }
+
+        if(reccurent == true){
+            decide(texts, metric, k + 1, true);
+            return;
+        }
+
+        if(k>2) {
+            decide(texts, metric, k - 1, false);
+        } else {
+            decide(texts, metric, k + 1, true);
+        }
+
     }
 
     public String getPrediction() {

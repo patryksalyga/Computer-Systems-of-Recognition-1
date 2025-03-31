@@ -50,9 +50,9 @@ public class Main {
         System.out.println(trainTextCount);
         System.out.println(testTextCount);
 
-//        testTexts.getTexts().get(0).decide(trainTexts.getTexts());
+//        testTexts.getTexts().get(1).decide(trainTexts.getTexts(), "euclidean", 4);
         for(Text text : testTexts.getTexts()){
-            text.decide(trainTexts.getTexts(), "euclidean", 4);
+            text.decide(trainTexts.getTexts(), "euclidean", 4, false);
             System.out.println(text.getPlaces() + " " + text.getPrediction());
         }
 
