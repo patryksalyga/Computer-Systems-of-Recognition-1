@@ -1,8 +1,7 @@
 package org.example;
 
 import java.util.*;
-
-import static java.lang.Double.NaN;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Text {
     private String places;
@@ -266,7 +265,8 @@ public class Text {
         s7 = (s7 - s7Min) / (s7Max - s7Min);
     }
 
-    public void decide(List<Text> texts) {
+    public void decide(List<Text> texts, String metric, int k) {
+        Map<Text, Double> distances = new HashMap<>();
         for(Text text : texts){
             //Zliczanie odleglosci do kazdego tekstu
 //            System.out.println(text.toString());
@@ -278,8 +278,73 @@ public class Text {
 //            if (Double.isNaN(Metrics.euclidean(this, text))){
 //                System.out.println(Metrics.euclidean(this, text) + "_____" + this.toString() + "------ " + text.toString());
 //            }
-            System.out.println(Metrics.euclidean(this, text));
+            double distance = 0;
+            if(metric.equals("euclidean")) {
+                //System.out.println(Metrics.euclidean(this, text));
+                distance = Metrics.euclidean(this, text);
+            } else if(metric.equals("manhattan")) {
+                System.out.println(Metrics.manhattan(this, text));
+                distance = Metrics.manhattan(this, text);
+            } else if(metric.equals("czebyszew")) {
+                System.out.println(Metrics.czebyszew(this, text));
+                distance = Metrics.czebyszew(this, text);
+            }
+            distances.put(text, distance);
         }
         //Decyzja
+        Map<String, Integer> votes = new HashMap<>();
+        Map<String, Double> distancesSum = new HashMap<>();
+
+        for (int i = 0; i < k; i++) {
+            Text nearest = Collections.min(distances.entrySet(), Map.Entry.comparingByValue()).getKey();
+            double distance = distances.get(nearest);
+            distances.remove(nearest);
+            if (votes.containsKey(nearest.getPlaces())) {
+                votes.put(nearest.getPlaces(), votes.get(nearest.getPlaces()) + 1);
+                distancesSum.put(nearest.getPlaces(), distancesSum.get(nearest.getPlaces()) + distance);
+            } else {
+                votes.put(nearest.getPlaces(), 1);
+                distancesSum.put(nearest.getPlaces(), distance);
+            }
+        }
+
+        System.out.println(votes);
+        System.out.println(distancesSum);
+
+        int maxVotes = Collections.max(votes.values());
+
+        System.out.println(maxVotes);
+
+        AtomicInteger maxVotesCount = new AtomicInteger(); // zmienna zliczająca ilość maksymalnych wartości
+
+        votes.forEach((country, val) -> {
+            if (val == maxVotes) {
+                maxVotesCount.getAndIncrement();
+            }
+        });
+
+        if(maxVotesCount.get() == 1) {
+            prediction = Collections.max(votes.entrySet(), Map.Entry.comparingByValue()).getKey();
+        } else {
+            double minDistance = Collections.min(distancesSum.values());
+
+            AtomicInteger minDistanceCount = new AtomicInteger(); // zmienna zliczająca ilość minimalnych wartości
+
+            distancesSum.forEach((country, val) -> {
+                if (val == minDistance) {
+                    minDistanceCount.getAndIncrement();
+                }
+            });
+
+            if(minDistanceCount.get() == 1) {
+                prediction = Collections.min(distancesSum.entrySet(), Map.Entry.comparingByValue()).getKey();
+            } else {
+                decide(texts, metric, k - 1);
+            }
+        }
+    }
+
+    public String getPrediction() {
+        return prediction;
     }
 }

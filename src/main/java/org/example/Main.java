@@ -52,7 +52,11 @@ public class Main {
 
 //        testTexts.getTexts().get(0).decide(trainTexts.getTexts());
         for(Text text : testTexts.getTexts()){
-            text.decide(trainTexts.getTexts());
+            text.decide(trainTexts.getTexts(), "euclidean", 4);
+            System.out.println(text.getPlaces() + " " + text.getPrediction());
         }
+
+        System.out.println(testTexts.rateAccuracy());
+        System.out.println("-----------------");
     }
 }

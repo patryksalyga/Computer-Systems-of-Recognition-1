@@ -85,4 +85,19 @@ public class TestTexts extends Texts {
 
 //        texts.get(0).createVector();
     }
+
+    public double rateAccuracy() {
+        int correct = 0;
+        int incorrect = 0;
+        for (Text text : texts) {
+            if (text.getPlaces().equals(text.getPrediction())) {
+                correct++;
+            } else {
+                incorrect++;
+            }
+        }
+        System.out.println("-----------------");
+        System.out.println("Correct: " + correct + " Incorrect: " + incorrect);
+        return (double) correct / (correct + incorrect);
+    }
 }
