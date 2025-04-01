@@ -25,11 +25,11 @@ public class Metrics {
     public static double manhattan(Text text1, Text text2){
         double sum = 0;
 
-        sum += nGrams(text1.getPmax(), text2.getPmax());
-        sum += nGrams(text1.getWmax(), text2.getWmax());
-        sum += nGrams(text1.getOmax(), text2.getOmax());
-        sum += nGrams(text1.getImax(), text2.getImax());
-        sum += nGrams(text1.getGmax(), text2.getGmax());
+        sum += 1 - nGrams(text1.getPmax(), text2.getPmax());
+        sum += 1 - nGrams(text1.getWmax(), text2.getWmax());
+        sum += 1 - nGrams(text1.getOmax(), text2.getOmax());
+        sum += 1 - nGrams(text1.getImax(), text2.getImax());
+        sum += 1 - nGrams(text1.getGmax(), text2.getGmax());
         sum += text1.isFkraj() == text2.isFkraj() ? 0 : 1;
         sum += Math.abs(text1.getLmax() - text2.getLmax());
         sum += Math.abs(text1.getLavg() - text2.getLavg());
@@ -43,11 +43,11 @@ public class Metrics {
     public static double czebyszew(Text text1, Text text2){
         List<Double> values = new LinkedList<>();
 
-        values.add(nGrams(text1.getPmax(), text2.getPmax()));
-        values.add(nGrams(text1.getWmax(), text2.getWmax()));
-        values.add(nGrams(text1.getOmax(), text2.getOmax()));
-        values.add(nGrams(text1.getImax(), text2.getImax()));
-        values.add(nGrams(text1.getGmax(), text2.getGmax()));
+        values.add(1 - nGrams(text1.getPmax(), text2.getPmax()));
+        values.add(1 - nGrams(text1.getWmax(), text2.getWmax()));
+        values.add(1 - nGrams(text1.getOmax(), text2.getOmax()));
+        values.add(1 - nGrams(text1.getImax(), text2.getImax()));
+        values.add(1 - nGrams(text1.getGmax(), text2.getGmax()));
         values.add((double) (text1.isFkraj() == text2.isFkraj() ? 0 : 1));
         values.add(Math.abs(text1.getLmax() - text2.getLmax()));
         values.add(Math.abs(text1.getLavg() - text2.getLavg()));

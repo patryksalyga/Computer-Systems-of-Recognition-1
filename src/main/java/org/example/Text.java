@@ -108,7 +108,8 @@ public class Text {
                 }
             }
 
-            if(dictionaries.getOrganizations().contains(word.toLowerCase())){
+            if(dictionaries.getOrganizations().contains(word)){
+
                 if (organisations.containsKey(word)){
                     organisations.put(word, organisations.get(word) + 1);
                     wordsFromDictionariesCount++;

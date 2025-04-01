@@ -29,7 +29,7 @@ public class Dictionaries {
 
             organizations = Files.readAllLines(Path.of("src/main/resources/reuters21578/all-orgs-strings.lc.txt"))
                     .stream()
-                    .map(line -> line.replaceAll("\\s+", ""))  // Remove all spaces
+                    .map(line -> line.replaceAll("\\s+", "").toUpperCase())  // Remove all spaces
                     .collect(Collectors.toList());
 
             exchanges = Files.readAllLines(Path.of("src/main/resources/reuters21578/all-exchanges-strings.lc.txt"))

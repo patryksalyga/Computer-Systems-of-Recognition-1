@@ -80,7 +80,8 @@ public class TestTexts extends Texts {
 
         for (Text text : texts){
             text.normalize(lmaxMax, lmaxMin, lavgMax, lavgMin, sdictMax, sdictMin, s7Max, s7Min);
-            //System.out.println(text.toString());
+//            String response = text.toString();
+//            System.out.println(response);
         }
 
 //        texts.get(0).createVector();
