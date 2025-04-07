@@ -101,4 +101,34 @@ public class TestTexts extends Texts {
         System.out.println("Correct: " + correct + " Incorrect: " + incorrect);
         return (double) correct / (correct + incorrect);
     }
+
+    public double ratePrecision(String place) {
+        int correct = 0;
+        int incorrect = 0;
+        for (Text text : texts) {
+            if (text.getPlaces().equals(place) && text.getPrediction().equals(place)) {
+                correct++;
+            } else if (!text.getPlaces().equals(place) && text.getPrediction().equals(place)) {
+                incorrect++;
+            }
+        }
+        return (double) correct / (correct + incorrect);
+    }
+
+    public double rateRecall(String place) {
+        int correct = 0;
+        int incorrect = 0;
+        for (Text text : texts) {
+            if (text.getPlaces().equals(place) && text.getPrediction().equals(place)) {
+                correct++;
+            } else if (text.getPlaces().equals(place) && !text.getPrediction().equals(place)) {
+                incorrect++;
+            }
+        }
+        return (double) correct / (correct + incorrect);
+    }
+
+    public double rateF1Score(double precision, double recall) {
+        return 2 * (precision * recall) / (precision + recall);
+    }
 }
