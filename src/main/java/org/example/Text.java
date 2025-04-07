@@ -28,6 +28,11 @@ public class Text {
         this.dictionaries = dictionaries;
     }
 
+    public void setPrediction(String prediction) {
+        this.prediction = prediction;
+    }
+
+
     public String getPlaces() {
         return places;
     }

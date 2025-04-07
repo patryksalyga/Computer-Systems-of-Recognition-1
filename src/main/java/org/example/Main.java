@@ -1,62 +1,66 @@
 package org.example;
 
-import java.util.HashMap;
+import java.util.*;
 
 public class Main {
+
+    public static HashMap<Integer, Double> testAccuracyForDifferentK(TestTexts testTexts, TrainTexts trainTexts, String metric) {
+        int[] kValues = {17};
+        HashMap<Integer, Double> accuracyResults = new HashMap<>();
+
+        for (int k : kValues) {
+            // Czyść predykcje
+            for (Text text : testTexts.getTexts()) {
+                text.setPrediction(null);
+            }
+
+            // Przeprowadź klasyfikację
+            for (Text text : testTexts.getTexts()) {
+                text.decide(trainTexts.getTexts(), metric, k, false);
+            }
+
+            // Oblicz accuracy
+            double accuracy = testTexts.rateAccuracy();
+            accuracyResults.put(k, accuracy);
+        }
+
+        return accuracyResults;
+    }
+
     public static void main(String[] args) {
         Dictionaries dictionaries = new Dictionaries();
         TestTexts testTexts = new TestTexts(dictionaries);
 
         ReutersProcessor rp = new ReutersProcessor(testTexts);
 
-        //System.out.println("Liczba przetworzonych artykułów: " + texts.getTexts().size());
-
-        HashMap<String, Integer> countryList = new HashMap<String, Integer>();
-
-        for(Text text : testTexts.getTexts()){
-            if ( countryList.containsKey(text.getPlaces())){
-                countryList.put(text.getPlaces(), countryList.get(text.getPlaces()) + 1);
-            } else {
-                countryList.put(text.getPlaces(), 1);
-            }
+        HashMap<String, Integer> countryList = new HashMap<>();
+        for (Text text : testTexts.getTexts()) {
+            countryList.merge(text.getPlaces(), 1, Integer::sum);
         }
-
-        //System.out.println(countryList);
-        //System.out.println(testTexts.getTexts().get(0).getArticle());
 
         testTexts.createVectors();
+        TrainTexts trainTexts = new TrainTexts(60, countryList, testTexts);
 
-        TrainTexts trainTexts = new TrainTexts(20, countryList, testTexts);
+        // Testuj accuracy dla różnych k
+        HashMap<Integer, Double> results = testAccuracyForDifferentK(testTexts, trainTexts, "czebyszew");
 
-        HashMap<String, Integer> testTextCount = new HashMap<String, Integer>();
-        HashMap<String, Integer> trainTextCount = new HashMap<String, Integer>();
+        System.out.println("\nAccuracy dla różnych wartości k (metryka: euklidesowa):");
+        results.keySet().stream().sorted().forEach(k ->
+                System.out.println("k = " + k + " -> Accuracy = " + results.get(k))
+        );
 
-        for(Text text : testTexts.getTexts()){
-            if ( testTextCount.containsKey(text.getPlaces())){
-                testTextCount.put(text.getPlaces(), testTextCount.get(text.getPlaces()) + 1);
-            } else {
-                testTextCount.put(text.getPlaces(), 1);
-            }
+        // Dodatkowe podsumowania (opcjonalnie)
+        HashMap<String, Integer> testTextCount = new HashMap<>();
+        HashMap<String, Integer> trainTextCount = new HashMap<>();
+
+        for (Text text : testTexts.getTexts()) {
+            testTextCount.merge(text.getPlaces(), 1, Integer::sum);
+        }
+        for (Text text : trainTexts.getTexts()) {
+            trainTextCount.merge(text.getPlaces(), 1, Integer::sum);
         }
 
-        for(Text text : trainTexts.getTexts()){
-            if ( trainTextCount.containsKey(text.getPlaces())){
-                trainTextCount.put(text.getPlaces(), trainTextCount.get(text.getPlaces()) + 1);
-            } else {
-                trainTextCount.put(text.getPlaces(), 1);
-            }
-        }
-
-        System.out.println(trainTextCount);
-        System.out.println(testTextCount);
-
-//        testTexts.getTexts().get(1).decide(trainTexts.getTexts(), "euclidean", 4);
-        for(Text text : testTexts.getTexts()){
-            text.decide(trainTexts.getTexts(), "euclidean", 4, false);
-            System.out.println(text.getPlaces() + " " + text.getPrediction());
-        }
-
-        System.out.println(testTexts.rateAccuracy());
-        System.out.println("-----------------");
+        System.out.println("\nTrain set distribution: " + trainTextCount);
+        System.out.println("Test set distribution: " + testTextCount);
     }
 }
