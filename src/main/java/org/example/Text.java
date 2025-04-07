@@ -273,14 +273,14 @@ public class Text {
         s7 = (s7 - s7Min) / (s7Max - s7Min);
     }
 
-    public void decide(List<Text> texts, String metric, int k, boolean reccurent) {
+    public void decide(List<Text> texts, String metric, int k, boolean[] options, boolean reccurent) {
         Map<Text, Double> distances = new HashMap<>();
 
         for (Text text : texts) {
             double distance = switch (metric) {
-                case "euclidean" -> Metrics.euclidean(this, text);
-                case "manhattan" -> Metrics.manhattan(this, text);
-                case "czebyszew" -> Metrics.czebyszew(this, text);
+                case "euclidean" -> Metrics.euclidean(this, text, options);
+                case "manhattan" -> Metrics.manhattan(this, text, options);
+                case "czebyszew" -> Metrics.czebyszew(this, text, options);
                 default -> throw new IllegalArgumentException("Nieznana metryka: " + metric);
             };
             distances.put(text, distance);
@@ -333,14 +333,14 @@ public class Text {
         }
 
         if(reccurent == true){
-            decide(texts, metric, k + 1, true);
+            decide(texts, metric, k + 1, options, true);
             return;
         }
 
         if(k>2) {
-            decide(texts, metric, k - 1, false);
+            decide(texts, metric, k - 1, options, false);
         } else {
-            decide(texts, metric, k + 1, true);
+            decide(texts, metric, k + 1, options, true);
         }
 
     }

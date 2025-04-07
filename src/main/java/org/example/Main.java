@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Main {
 
-    public static HashMap<Integer, Double> testAccuracyForDifferentK(TestTexts testTexts, TrainTexts trainTexts, String metric) {
+    public static HashMap<Integer, Double> testAccuracyForDifferentK(TestTexts testTexts, TrainTexts trainTexts, String metric, boolean[] options) {
         int[] kValues = {17};
         HashMap<Integer, Double> accuracyResults = new HashMap<>();
 
@@ -16,7 +16,7 @@ public class Main {
 
             // Przeprowadź klasyfikację
             for (Text text : testTexts.getTexts()) {
-                text.decide(trainTexts.getTexts(), metric, k, false);
+                text.decide(trainTexts.getTexts(), metric, k, options, false);
             }
 
             // Oblicz accuracy
@@ -29,6 +29,7 @@ public class Main {
 
     public static void main(String[] args) {
         Dictionaries dictionaries = new Dictionaries();
+        boolean [] options = {true, true, true, true, true, true, true, true, true, true};
         TestTexts testTexts = new TestTexts(dictionaries);
 
         ReutersProcessor rp = new ReutersProcessor(testTexts);
@@ -42,7 +43,7 @@ public class Main {
         TrainTexts trainTexts = new TrainTexts(60, countryList, testTexts);
 
         // Testuj accuracy dla różnych k
-        HashMap<Integer, Double> results = testAccuracyForDifferentK(testTexts, trainTexts, "czebyszew");
+        HashMap<Integer, Double> results = testAccuracyForDifferentK(testTexts, trainTexts, "czebyszew", options);
 
         System.out.println("\nAccuracy dla różnych wartości k (metryka: euklidesowa):");
         results.keySet().stream().sorted().forEach(k ->
