@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) {
         Dictionaries dictionaries = new Dictionaries();
-        boolean [] options = {true, true, true, true, true, false, true, true, true, true};
+        boolean [] options = {true, true, true, true, true, true, true, true, true, true};
         TestTexts testTexts = new TestTexts(dictionaries);
 
         ReutersProcessor rp = new ReutersProcessor(testTexts);
@@ -36,6 +36,13 @@ public class Main {
         System.out.println("\nAccuracy dla różnych wartości k:");
         for(Results result : results) {
                 System.out.println("k = " + result.getK() + " -> Accuracy = " + result.getAccuracy());
+                System.out.println("USA: " + result.getUsaPrecision() + " " + result.getUsaRecall() + " " + result.getF1Score());
+                System.out.println("Japan: " + result.getJapanPrecision() + " " + result.getJapanRecall() + " " + result.getJapanF1Score());
+                System.out.println("France: " + result.getFrancePrecision() + " " + result.getFranceRecall() + " " + result.getFranceF1Score());
+                System.out.println("UK: " + result.getUkPrecision() + " " + result.getUkRecall() + " " + result.getUkF1Score());
+                System.out.println("Canada: " + result.getCanadaPrecision() + " " + result.getCanadaRecall() + " " + result.getCanadaF1Score());
+                System.out.println("West-Germany: " + result.getWgPrecision() + " " + result.getWgRecall() + " " + result.getWgF1Score());
+                System.out.println();
         }
 
         // Dodatkowe podsumowania (opcjonalnie)
