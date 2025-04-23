@@ -34,15 +34,24 @@ public class Main {
         List<Results> results = testAccuracyForDifferentK(testTexts, trainTexts, "euclidean", options);
 
         System.out.println("\nAccuracy dla różnych wartości k:");
-        for(Results result : results) {
-                System.out.println("k = " + result.getK() + " -> Accuracy = " + result.getAccuracy());
-                System.out.println("USA: " + result.getUsaPrecision() + " " + result.getUsaRecall() + " " + result.getF1Score());
-                System.out.println("Japan: " + result.getJapanPrecision() + " " + result.getJapanRecall() + " " + result.getJapanF1Score());
-                System.out.println("France: " + result.getFrancePrecision() + " " + result.getFranceRecall() + " " + result.getFranceF1Score());
-                System.out.println("UK: " + result.getUkPrecision() + " " + result.getUkRecall() + " " + result.getUkF1Score());
-                System.out.println("Canada: " + result.getCanadaPrecision() + " " + result.getCanadaRecall() + " " + result.getCanadaF1Score());
-                System.out.println("West-Germany: " + result.getWgPrecision() + " " + result.getWgRecall() + " " + result.getWgF1Score());
-                System.out.println();
+        for (Results result : results) {
+            System.out.println("k = " + result.getK() + " -> Accuracy = " + result.getAccuracy());
+            System.out.println();
+            System.out.printf("%-15s %-10s %-10s %-10s %-10s %-10s%n", "Country", "Precision", "Recall", "F1-Score", "Correct", "Incorrect");
+            System.out.println("---------------------------------------------------------------");
+            System.out.printf("%-15s %-10.2f %-10.2f %-10.2f %-10d %-10d%n", "USA", result.getUsaPrecision(), result.getUsaRecall(), result.getF1Score(), result.getUsaCorrect(), result.getUsaIncorrect());
+            System.out.printf("%-15s %-10.2f %-10.2f %-10.2f %-10d %-10d%n", "Japan", result.getJapanPrecision(), result.getJapanRecall(), result.getJapanF1Score(), result.getJapanCorrect(), result.getJapanIncorrect());
+            System.out.printf("%-15s %-10.2f %-10.2f %-10.2f %-10d %-10d%n", "France", result.getFrancePrecision(), result.getFranceRecall(), result.getFranceF1Score(), result.getFranceCorrect(), result.getFranceIncorrect());
+            System.out.printf("%-15s %-10.2f %-10.2f %-10.2f %-10d %-10d%n", "UK", result.getUkPrecision(), result.getUkRecall(), result.getUkF1Score(), result.getUkCorrect(), result.getUkIncorrect());
+            System.out.printf("%-15s %-10.2f %-10.2f %-10.2f %-10d %-10d%n", "Canada", result.getCanadaPrecision(), result.getCanadaRecall(), result.getCanadaF1Score(), result.getCanadaCorrect(), result.getCanadaIncorrect());
+            System.out.printf("%-15s %-10.2f %-10.2f %-10.2f %-10d %-10d%n", "West-Germany", result.getWgPrecision(), result.getWgRecall(), result.getWgF1Score(), result.getWgCorrect(), result.getWgIncorrect());
+            System.out.println();
+            System.out.println("Total Correct: " + result.getTotalCorrect());
+            System.out.println("Total Incorrect: " + result.getTotalIncorrect());
+            System.out.println();
+            System.out.println("---------------------------------------------------------------");
+            System.out.println("---------------------------------------------------------------");
+            System.out.println();
         }
 
         // Dodatkowe podsumowania (opcjonalnie)

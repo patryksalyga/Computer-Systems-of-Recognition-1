@@ -2,6 +2,20 @@ package org.example;
 
 public class Results {
     private double accuracy;
+    private int usaCorrect;
+    private int usaIncorrect;
+    private int japanCorrect;
+    private int japanIncorrect;
+    private int franceCorrect;
+    private int franceIncorrect;
+    private int ukCorrect;
+    private int ukIncorrect;
+    private int canadaCorrect;
+    private int canadaIncorrect;
+    private int wgCorrect;
+    private int wgIncorrect;
+    private int totalCorrect;
+    private int totalIncorrect;
     private double usaPrecision;
     private  double usaRecall;
     private double f1Score;
@@ -34,6 +48,48 @@ public class Results {
         for (Text text : testTexts.getTexts()) {
             text.decide(trainTexts.getTexts(), metric, k, options, false);
         }
+
+        for(Text text : testTexts.getTexts()){
+            if(text.getPlaces().equals("usa")){
+                if(text.getPrediction().equals("usa")){
+                    usaCorrect++;
+                } else {
+                    usaIncorrect++;
+                }
+            } else if(text.getPlaces().equals("japan")){
+                if(text.getPrediction().equals("japan")){
+                    japanCorrect++;
+                } else {
+                    japanIncorrect++;
+                }
+            } else if(text.getPlaces().equals("france")){
+                if(text.getPrediction().equals("france")){
+                    franceCorrect++;
+                } else {
+                    franceIncorrect++;
+                }
+            } else if(text.getPlaces().equals("uk")){
+                if(text.getPrediction().equals("uk")){
+                    ukCorrect++;
+                } else {
+                    ukIncorrect++;
+                }
+            } else if(text.getPlaces().equals("canada")){
+                if(text.getPrediction().equals("canada")){
+                    canadaCorrect++;
+                } else {
+                    canadaIncorrect++;
+                }
+            } else if(text.getPlaces().equals("west-germany")){
+                if(text.getPrediction().equals("west-germany")){
+                    wgCorrect++;
+                } else {
+                    wgIncorrect++;
+                }
+            }
+        }
+        totalCorrect = usaCorrect + japanCorrect + franceCorrect + ukCorrect + canadaCorrect + wgCorrect;
+        totalIncorrect = usaIncorrect + japanIncorrect + franceIncorrect + ukIncorrect + canadaIncorrect + wgIncorrect;
 
         // Oblicz accuracy
         accuracy = testTexts.rateAccuracy();
@@ -141,5 +197,61 @@ public class Results {
 
     public double getWgF1Score() {
         return wgF1Score;
+    }
+
+    public int getUsaCorrect() {
+        return usaCorrect;
+    }
+
+    public int getUsaIncorrect() {
+        return usaIncorrect;
+    }
+
+    public int getJapanCorrect() {
+        return japanCorrect;
+    }
+
+    public int getJapanIncorrect() {
+        return japanIncorrect;
+    }
+
+    public int getFranceCorrect() {
+        return franceCorrect;
+    }
+
+    public int getFranceIncorrect() {
+        return franceIncorrect;
+    }
+
+    public int getUkCorrect() {
+        return ukCorrect;
+    }
+
+    public int getUkIncorrect() {
+        return ukIncorrect;
+    }
+
+    public int getCanadaCorrect() {
+        return canadaCorrect;
+    }
+
+    public int getCanadaIncorrect() {
+        return canadaIncorrect;
+    }
+
+    public int getWgCorrect() {
+        return wgCorrect;
+    }
+
+    public int getWgIncorrect() {
+        return wgIncorrect;
+    }
+
+    public int getTotalCorrect() {
+        return totalCorrect;
+    }
+
+    public int getTotalIncorrect() {
+        return totalIncorrect;
     }
 }
