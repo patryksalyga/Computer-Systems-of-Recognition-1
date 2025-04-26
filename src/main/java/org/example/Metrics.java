@@ -63,26 +63,44 @@ public class Metrics {
         return max;
     }
 
-    public static double nGrams(String text1, String text2){
-        if(text1 == null  && text2 == null){
-            return 1;
-        }
-        else if(text1 == null || text2 == null){
-            return 0;
+    public static double nGrams(String text1, String text2) {
+        if (text1 == null && text2 == null) {
+            return 1.0;
+        } else if (text1 == null || text2 == null) {
+            return 0.0;
+        } else if (text1.equals(text2)) {
+            return 1.0;
         } else {
             int n = 3;
-            int sum = 0;
-            int count = 0;
+            int sum1 = 0;
+            int count1 = 0;
+            int sum2 = 0;
+            int count2 = 0;
+
             for (int i = 2; i <= n; i++) {
                 for (int j = 0; j < text1.length() - i + 1; j++) {
                     String ngram = text1.substring(j, j + i);
                     if (text2.contains(ngram)) {
-                        sum++;
+                        sum1++;
                     }
-                    count++;
+                    count1++;
                 }
             }
-            return (double) sum / count;
+
+            for (int i = 2; i <= n; i++) {
+                for (int j = 0; j < text2.length() - i + 1; j++) {
+                    String ngram = text2.substring(j, j + i);
+                    if (text1.contains(ngram)) {
+                        sum2++;
+                    }
+                    count2++;
+                }
+            }
+
+            double similarity1 = (double) sum1 / count1;
+            double similarity2 = (double) sum2 / count2;
+
+            return Math.min(similarity1, similarity2);
         }
     }
 }

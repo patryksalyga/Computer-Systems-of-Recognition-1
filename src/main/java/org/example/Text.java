@@ -41,7 +41,7 @@ public class Text {
         return body;
     }
 
-    public void createVector() {
+    public void createVector(double ngramTolerance) {
         String[] words = body.replaceAll("&lt;", "<")
                 .replaceAll("&gt;", ">")
                 .replaceAll("&#\\d+;", "")
@@ -83,54 +83,63 @@ public class Text {
                 continue;
             }
 
-            if(dictionaries.getCountries().contains(word.toLowerCase())){
-                if (countries.containsKey(word)){
-                    countries.put(word, countries.get(word) + 1);
-                    wordsFromDictionariesCount++;
-                } else {
-                    countries.put(word, 1);
-                    wordsFromDictionariesCount++;
+            for (String country : dictionaries.getCountries()) {
+                if (Metrics.nGrams(word.toLowerCase(), country) >= ngramTolerance) {
+                    if (countries.containsKey(country)){
+                        countries.put(country, countries.get(country) + 1);
+                        wordsFromDictionariesCount++;
+                    } else {
+                        countries.put(country, 1);
+                        wordsFromDictionariesCount++;
+                    }
                 }
             }
 
-            if(dictionaries.getCurrencies().contains(word.toLowerCase())){
-                if (currencies.containsKey(word)){
-                    currencies.put(word, currencies.get(word) + 1);
-                    wordsFromDictionariesCount++;
-                } else {
-                    currencies.put(word, 1);
-                    wordsFromDictionariesCount++;
+            for (String currency : dictionaries.getCurrencies()) {
+                if (Metrics.nGrams(word.toLowerCase(), currency) >= ngramTolerance) {
+                    if (currencies.containsKey(currency)){
+                        currencies.put(currency, currencies.get(currency) + 1);
+                        wordsFromDictionariesCount++;
+                    } else {
+                        currencies.put(currency, 1);
+                        wordsFromDictionariesCount++;
+                    }
                 }
             }
 
-            if(dictionaries.getPersons().contains(word.toLowerCase())){
-                if (persons.containsKey(word)){
-                    persons.put(word, persons.get(word) + 1);
-                    wordsFromDictionariesCount++;
-                } else {
-                    persons.put(word, 1);
-                    wordsFromDictionariesCount++;
+            for (String person : dictionaries.getPersons()) {
+                if (Metrics.nGrams(word.toLowerCase(), person) >= ngramTolerance) {
+                    if (persons.containsKey(person)){
+                        persons.put(person, persons.get(person) + 1);
+                        wordsFromDictionariesCount++;
+                    } else {
+                        persons.put(person, 1);
+                        wordsFromDictionariesCount++;
+                    }
                 }
             }
 
-            if(dictionaries.getOrganizations().contains(word)){
-
-                if (organisations.containsKey(word)){
-                    organisations.put(word, organisations.get(word) + 1);
-                    wordsFromDictionariesCount++;
-                } else {
-                    organisations.put(word, 1);
-                    wordsFromDictionariesCount++;
+            for (String organization : dictionaries.getOrganizations()) {
+                if (Metrics.nGrams(word, organization) >= ngramTolerance) {
+                    if (organisations.containsKey(organization)){
+                        organisations.put(organization, organisations.get(organization) + 1);
+                        wordsFromDictionariesCount++;
+                    } else {
+                        organisations.put(organization, 1);
+                        wordsFromDictionariesCount++;
+                    }
                 }
             }
 
-            if(dictionaries.getExchanges().contains(word.toLowerCase())){
-                if (exchanges.containsKey(word)){
-                    exchanges.put(word, exchanges.get(word) + 1);
-                    wordsFromDictionariesCount++;
-                } else {
-                    exchanges.put(word, 1);
-                    wordsFromDictionariesCount++;
+            for (String exchange : dictionaries.getExchanges()) {
+                if (Metrics.nGrams(word.toLowerCase(), exchange) >= ngramTolerance) {
+                    if (exchanges.containsKey(exchange)){
+                        exchanges.put(exchange, exchanges.get(exchange) + 1);
+                        wordsFromDictionariesCount++;
+                    } else {
+                        exchanges.put(exchange, 1);
+                        wordsFromDictionariesCount++;
+                    }
                 }
             }
 

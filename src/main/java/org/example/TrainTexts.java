@@ -5,14 +5,14 @@ import java.util.*;
 public class TrainTexts extends Texts {
     private List<Text> texts = new ArrayList<Text>();
 
-    public TrainTexts(int p, HashMap<String, Integer> countryList, TestTexts testTexts) {
+    public TrainTexts(int trainingSetProportion, HashMap<String, Integer> countryList, TestTexts testTexts) {
         countryList.forEach((k, v) -> {
             int i = 0;
             Iterator<Text> iterator = testTexts.getTexts().iterator();
             while (iterator.hasNext()) {
                 Text text = iterator.next();
                 if (text.getPlaces().equals(k)) {
-                    if (p * v / 100 > i) {
+                    if (trainingSetProportion * v / 100 > i) {
                         this.texts.add(text);
                         iterator.remove();
                         i++;

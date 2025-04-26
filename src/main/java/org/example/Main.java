@@ -4,8 +4,7 @@ import java.util.*;
 
 public class Main {
 
-    public static List<Results> testAccuracyForDifferentK(TestTexts testTexts, TrainTexts trainTexts, String metric, boolean[] options) {
-        int[] kValues = {4, 20};
+    public static List<Results> testAccuracyForDifferentK(TestTexts testTexts, TrainTexts trainTexts, String metric, boolean[] options, int[] kValues) {
         List<Results> results = new LinkedList<>();
 
         for (int k : kValues) {
@@ -17,8 +16,13 @@ public class Main {
 
     public static void main(String[] args) {
         Dictionaries dictionaries = new Dictionaries();
-        boolean [] options = {true, true, true, true, true, true, true, true, true, true};
+        boolean [] options = {true, true, true, true, true, true, true, true, true, true}; //pmax, pavg, pmin, smax, savg, smin, lmax, lavg, lmin, s7
         TestTexts testTexts = new TestTexts(dictionaries);
+        Double ngramTolerance = 1.0; // 0.0 - 1.0
+        String metric = "euclidean"; //euclidean, manhattan, czebyszew
+        int trainingSetProportion = 40; // 0 - 100
+        int[] kValues = {17}; 
+
 
         ReutersProcessor rp = new ReutersProcessor(testTexts);
 
@@ -27,11 +31,11 @@ public class Main {
             countryList.merge(text.getPlaces(), 1, Integer::sum);
         }
 
-        testTexts.createVectors();
-        TrainTexts trainTexts = new TrainTexts(40, countryList, testTexts);
+        testTexts.createVectors(ngramTolerance);
+        TrainTexts trainTexts = new TrainTexts(trainingSetProportion, countryList, testTexts);
 
         // Testuj accuracy dla różnych k
-        List<Results> results = testAccuracyForDifferentK(testTexts, trainTexts, "euclidean", options);
+        List<Results> results = testAccuracyForDifferentK(testTexts, trainTexts, metric, options, kValues);
 
         System.out.println("\nAccuracy dla różnych wartości k:");
         for (Results result : results) {

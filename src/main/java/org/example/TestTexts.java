@@ -44,9 +44,9 @@ public class TestTexts extends Texts {
         return dictionaries;
     }
 
-    public void createVectors(){
+    public void createVectors(double ngramTolerance){
         for(Text text : texts){
-            text.createVector();
+            text.createVector(ngramTolerance);
             //System.out.println(text.toString());
 
             if(text.getLmax() > lmaxMax){
