@@ -8,7 +8,7 @@ import java.util.Set;
 public class ReutersProcessor {
     private static final Set<String> allowedPlaces = Set.of("usa", "japan", "france", "uk", "canada", "west-germany");
 
-    public ReutersProcessor(TestTexts testTexts) {
+    public ReutersProcessor(Texts texts) {
         List<File> files = new ArrayList<>();
 
         String basePath = "src/main/resources/reuters21578/";
@@ -21,7 +21,7 @@ public class ReutersProcessor {
 
         for (File file : files) {
             if (file.exists()) {
-                processFile(file, testTexts);
+                processFile(file, texts);
             } else {
                 System.out.println("Plik nie istnieje: " + file.getAbsolutePath());
             }
@@ -29,7 +29,7 @@ public class ReutersProcessor {
     }
 
 
-    private static void processFile(File file, TestTexts testTexts) {
+    private static void processFile(File file, Texts texts) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             StringBuilder rawString = new StringBuilder();
             String line;
@@ -38,14 +38,14 @@ public class ReutersProcessor {
                 rawString.append(line).append("\n");
             }
 
-            extractArticles(rawString.toString(), testTexts);
+            extractArticles(rawString.toString(), texts);
         } catch (IOException e) {
             System.err.println("Błąd podczas przetwarzania pliku: " + file.getName());
             e.printStackTrace();
         }
     }
 
-    private static void extractArticles(String content, TestTexts testTexts) {
+    private static void extractArticles(String content, Texts texts) {
         String[] articles = content.split("<REUTERS");
         for (String article : articles) {
             if (!article.contains("</REUTERS>")) continue;
@@ -59,7 +59,7 @@ public class ReutersProcessor {
             String places = extractTag(extractTag(article, "PLACES"));
 
             if (allowedPlaces.contains(places)) {
-                testTexts.addTexts(new Text(places, body, testTexts.getDictionaries()));
+                texts.addTexts(new Text(places, body, texts.getDictionaries()));
             }
 
         }

@@ -43,11 +43,11 @@ public class Dictionaries {
             throw new RuntimeException(e);
         }
 
-        System.out.println(countries);
-        System.out.println(persons);
-        System.out.println(organizations);
-        System.out.println(exchanges);
-        System.out.println(currencies);
+//        System.out.println(countries);
+//        System.out.println(persons);
+//        System.out.println(organizations);
+//        System.out.println(exchanges);
+//        System.out.println(currencies);
     }
 
     private List<String> extractCurrencies(String filePath) throws IOException {

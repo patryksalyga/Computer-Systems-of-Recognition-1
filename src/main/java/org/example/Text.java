@@ -314,8 +314,8 @@ public class Text {
             distancesSum.put(place, distancesSum.getOrDefault(place, 0.0) + entry.getValue());
         }
 
-        System.out.println("Głosy: " + votes);
-        System.out.println("Sumy odległości: " + distancesSum);
+//        System.out.println("Głosy: " + votes);
+//        System.out.println("Sumy odległości: " + distancesSum);
 
         int maxVotes = Collections.max(votes.values());
 
