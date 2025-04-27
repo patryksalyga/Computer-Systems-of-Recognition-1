@@ -43,7 +43,7 @@ public class TestTexts {
                 incorrect++;
             }
         }
-        return (double) correct / (correct + incorrect);
+        return (correct + incorrect) == 0 ? 0.0 : (double) correct / (correct + incorrect);
     }
 
     public double rateRecall(String place) {
@@ -56,10 +56,10 @@ public class TestTexts {
                 incorrect++;
             }
         }
-        return (double) correct / (correct + incorrect);
+        return (correct + incorrect) == 0 ? 0.0 : (double) correct / (correct + incorrect);
     }
 
     public double rateF1Score(double precision, double recall) {
-        return 2 * (precision * recall) / (precision + recall);
+        return (precision + recall) == 0 ? 0.0 : 2 * (precision * recall) / (precision + recall);
     }
 }

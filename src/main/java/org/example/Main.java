@@ -52,10 +52,10 @@ public class Main {
 
     public static void main(String[] args) {
         boolean [] options = {true, true, true, true, true, true, true, true, true, true}; //pmax, pavg, pmin, smax, savg, smin, lmax, lavg, lmin, s7
-        double[] ngramTolerances = {0.1, 0.3, 0.5, 0.7, 1.0}; // 0.0 - 1.0
+        double[] ngramTolerances = {}; // 0.0 - 1.0  0.1, 0.3, 0.5, 0.7, 1.0
         String metric = "euclidean"; //euclidean, manhattan, czebyszew
         int[] trainingSetProportions = {20, 30, 40, 50, 60}; // 0 - 100
-        int[] kValues = {1, 5, 9, 15, 25, 50, 75, 100}; // k values to test
+        int[] kValues = {1, 2, 5, 9, 15, 20, 25, 50, 75, 100}; // k values to test
 
         Dictionaries dictionaries = new Dictionaries();
         Texts texts = new Texts(dictionaries);
