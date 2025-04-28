@@ -51,12 +51,11 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        boolean [] options = {true, true, true, true, true, true, true, true, true, true}; //pmax, pavg, pmin, smax, savg, smin, lmax, lavg, lmin, s7
-        double[] ngramTolerances = {}; // 0.0 - 1.0  0.1, 0.3, 0.5, 0.7, 1.0
-        String metric = "euclidean"; //euclidean, manhattan, czebyszew
-        int[] trainingSetProportions = {20, 30, 40, 50, 60}; // 0 - 100
-        int[] kValues = {1, 2, 5, 9, 15, 20, 25, 50, 75, 100}; // k values to test
-
+//        boolean [] options = {true, true, true, true, true, true, true, true, true, true}; //pmax, wmax, omax, imax, qmax, fkraj, lmax, lavg, sdict, s
+//        double[] ngramTolerances = {0.1, 0.3, 0.5, 0.7, 1.0}; // 0.0 - 1.0  0.1, 0.3, 0.5, 0.7, 1
+//        String metric = "euclidean"; //euclidean, manhattan, czebyszew
+//        int[] trainingSetProportions = {20, 30, 40, 50, 60}; // 0 - 100
+//        int[] kValues = {1, 2, 5, 9, 15, 20, 25, 50, 75, 100}; // k values to
         Dictionaries dictionaries = new Dictionaries();
         Texts texts = new Texts(dictionaries);
         TestTexts testTexts = new TestTexts();
@@ -69,59 +68,108 @@ public class Main {
             countryList.merge(text.getPlaces(), 1, Integer::sum);
         }
 
-        texts.createVectors(1.0);
-        TrainTexts trainTexts = new TrainTexts(40, countryList, testTexts, texts);
+//        texts.createVectors(1.0);
+//        TrainTexts trainTexts = new TrainTexts(40, countryList, testTexts, texts);
+//
+//        // Testuj accuracy dla różnych k
+//        List<Results> kResults = testAccuracyForDifferentK(testTexts, trainTexts, metric, options, kValues);
+//
+//        System.out.println("\nAccuracy dla różnych wartości k:");
+//        for (Results result : kResults) {
+//            printResults(result, 1.0, metric, 40, testTexts, trainTexts);
+//        }
+//
+//        int bestK = kResults.stream().max(Comparator.comparingDouble(Results::getAccuracy)).get().getK();
+//        System.out.println("Best k: " + bestK + "\n");
+//
+//        // Step 2: Find the best training set proportion with the best k
+//        System.out.println("\nTesting different training set proportions:");
+//        int bestTrainingSetProportion = 40; // Default value
+//        double bestAccuracy = 0.0;
+//
+//        for (int proportion : trainingSetProportions) {
+//            testTexts = new TestTexts();
+//            trainTexts = new TrainTexts(proportion, countryList, testTexts, texts);
+//            Results result = new Results(trainTexts, metric, bestK, options, false, testTexts);
+//            printResults(result, 1.0, metric, proportion, testTexts, trainTexts);
+//            if (result.getAccuracy() > bestAccuracy) {
+//                bestAccuracy = result.getAccuracy();
+//                bestTrainingSetProportion = proportion;
+//            }
+//        }
+//        System.out.println("Best training set proportion: " + bestTrainingSetProportion);
+//
+//        // Step 3: Find the best ngramTolerance with the best k and best training set proportion
+//        System.out.println("\nTesting different ngramTolerance values:");
+//        double bestNgramTolerance = 1.0; // Default value
+//        bestAccuracy = 0.0;
+//
+//        for (double tolerance : ngramTolerances) {
+//            texts.createVectors(tolerance);
+//            testTexts = new TestTexts();
+//            trainTexts = new TrainTexts(bestTrainingSetProportion, countryList, testTexts, texts);
+//            Results result = new Results(trainTexts, metric, bestK, options, false, testTexts);
+//            printResults(result, tolerance, metric, bestTrainingSetProportion, testTexts, trainTexts);
+//            if (result.getAccuracy() > bestAccuracy) {
+//                bestAccuracy = result.getAccuracy();
+//                bestNgramTolerance = tolerance;
+//            }
+//        }
+//        System.out.println("Best ngramTolerance: " + bestNgramTolerance);
+//
+//        // Final results
+//        System.out.println("\nFinal configuration:");
+//        System.out.println("k = " + bestK);
+//        System.out.println("Training set proportion = " + bestTrainingSetProportion + "%");
+//        System.out.println("ngramTolerance = " + bestNgramTolerance);
 
-        // Testuj accuracy dla różnych k
+        Scanner scanner = new Scanner(System.in).useLocale(Locale.US);
+
+        boolean[] options = new boolean[10];
+        System.out.println("Enter values for options (true/false) for the following:");
+        String[] optionNames = {"pmax", "wmax", "omax", "imax", "qmax", "fkraj", "lmax", "lavg", "sdict", "s"};
+        for (int i = 0; i < options.length; i++) {
+            System.out.print(optionNames[i] + " (1 for true, 0 for false): ");
+            int input = scanner.nextInt();
+            options[i] = (input == 1);
+        }
+
+        System.out.println("Enter ngramTolerance (e.g., 0.1, 0.3, 0.5, 0.7, 1.0): ");
+        double ngramTolerance = scanner.nextDouble();
+
+        System.out.println("Enter metric (euclidean, manhattan, czebyszew): ");
+        String metric = scanner.next();
+
+        System.out.println("Enter training set proportion (e.g., 20, 30, 40, 50, 60): ");
+        int trainingSetProportion = scanner.nextInt();
+
+        System.out.println("Enter k value (e.g., 1, 2, 5, 9, 15, 20, 25, 50, 75, 100): ");
+        int kValue = scanner.nextInt();
+        int[] kValues = {kValue};
+
+        System.out.println("\nSelected Values:");
+        System.out.print("Options: ");
+        for (int i = 0; i < options.length; i++) {
+            System.out.print(optionNames[i] + "=" + options[i] + " ");
+        }
+        System.out.println("\nngramTolerance: " + ngramTolerance);
+        System.out.println("Metric: " + metric);
+        System.out.println("Training Set Proportion: " + trainingSetProportion);
+        System.out.println("k Value: " + kValue);
+
+        scanner.close();
+
+        texts.createVectors(ngramTolerance);
+        TrainTexts trainTexts = new TrainTexts(trainingSetProportion, countryList, testTexts, texts);
+
         List<Results> kResults = testAccuracyForDifferentK(testTexts, trainTexts, metric, options, kValues);
 
         System.out.println("\nAccuracy dla różnych wartości k:");
         for (Results result : kResults) {
-            printResults(result, 1.0, metric, 40, testTexts, trainTexts);
+            printResults(result, ngramTolerance, metric, trainingSetProportion, testTexts, trainTexts);
         }
 
         int bestK = kResults.stream().max(Comparator.comparingDouble(Results::getAccuracy)).get().getK();
         System.out.println("Best k: " + bestK + "\n");
-
-        // Step 2: Find the best training set proportion with the best k
-        System.out.println("\nTesting different training set proportions:");
-        int bestTrainingSetProportion = 40; // Default value
-        double bestAccuracy = 0.0;
-
-        for (int proportion : trainingSetProportions) {
-            testTexts = new TestTexts();
-            trainTexts = new TrainTexts(proportion, countryList, testTexts, texts);
-            Results result = new Results(trainTexts, metric, bestK, options, false, testTexts);
-            printResults(result, 1.0, metric, proportion, testTexts, trainTexts);
-            if (result.getAccuracy() > bestAccuracy) {
-                bestAccuracy = result.getAccuracy();
-                bestTrainingSetProportion = proportion;
-            }
-        }
-        System.out.println("Best training set proportion: " + bestTrainingSetProportion);
-
-        // Step 3: Find the best ngramTolerance with the best k and best training set proportion
-        System.out.println("\nTesting different ngramTolerance values:");
-        double bestNgramTolerance = 1.0; // Default value
-        bestAccuracy = 0.0;
-
-        for (double tolerance : ngramTolerances) {
-            texts.createVectors(tolerance);
-            testTexts = new TestTexts();
-            trainTexts = new TrainTexts(bestTrainingSetProportion, countryList, testTexts, texts);
-            Results result = new Results(trainTexts, metric, bestK, options, false, testTexts);
-            printResults(result, tolerance, metric, bestTrainingSetProportion, testTexts, trainTexts);
-            if (result.getAccuracy() > bestAccuracy) {
-                bestAccuracy = result.getAccuracy();
-                bestNgramTolerance = tolerance;
-            }
-        }
-        System.out.println("Best ngramTolerance: " + bestNgramTolerance);
-
-        // Final results
-        System.out.println("\nFinal configuration:");
-        System.out.println("k = " + bestK);
-        System.out.println("Training set proportion = " + bestTrainingSetProportion + "%");
-        System.out.println("ngramTolerance = " + bestNgramTolerance);
     }
 }
